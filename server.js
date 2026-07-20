@@ -1,34 +1,23 @@
-const express = require("express");
-const { connectDB } = require("./src/config/db");
+// server.js
+
 require("dotenv").config();
 
-const app = express();
+const app = require("./src/app");
+const { connectDB } = require("./src/config/db");
+
 const PORT = process.env.PORT || 5000;
-
-app.use(express.json());
-
-app.get("/", (req, res) => {
-  res.json({
-    message: "Backend training API is running",
-  });
-});
-
-app.use((req, res) => {
-  res.status(404).json({
-    success: false,
-    message: "Route not found",
-  });
-});
 
 async function startServer() {
   try {
+    // Connect to database
     await connectDB();
 
+    // Start Express server
     app.listen(PORT, () => {
-      console.log(`Server is running on port ${PORT}`);
+      console.log(`🚀 Server is running on port ${PORT}`);
     });
-  } catch (err) {
-    console.error("Failed to connect to the database:", err);
+  } catch (error) {
+    console.error("❌ Failed to start server:", error);
     process.exit(1);
   }
 }
