@@ -1,7 +1,7 @@
 const User = require("../models/user.model");
 
 async function getSingleUser() {
-  const user = await User.findOne().sort({ createdAt: 1 }).lean();
+  const user = User.data;
 
   if (!user) {
     const error = new Error("User not found");

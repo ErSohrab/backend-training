@@ -1,12 +1,11 @@
 const Product = require("../models/product.model");
 
 async function getAllProducts() {
-  const products = await Product.find()
-    .sort({ id: 1, createdAt: 1 })
-    .select("id name type -_id")
-    .lean();
-
-  return products;
+  return Product.data.map((product) => ({
+    id: product.id,
+    name: product.name,
+    type: product.type,
+  }));
 }
 
 module.exports = {

@@ -1,28 +1,21 @@
-// src/models/product.model.js
-
-const mongoose = require("mongoose");
-
-const productSchema = new mongoose.Schema(
-  {
-    id: {
-      type: Number,
-      required: true,
-      unique: true,
+const product = {
+  data: [
+      {
+      "id":101,
+      "name":"Redis Basics",
+      "type":"course"
     },
-    name: {
-      type: String,
-      required: true,
-      trim: true,
+    {
+      "id":102,
+      "name":"Express API",
+      "type":"course"
     },
-    type: {
-      type: String,
-      required: true,
-      enum: ["course", "task"],
+    {
+      "id":103,
+      "name":"Cache Assignment",
+      "type":"task"
     },
-  },
-  {
-    timestamps: true,
-  }
-);
+  ],
+};
 
-module.exports = mongoose.model("Product", productSchema);
+module.exports = product;
