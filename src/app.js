@@ -1,16 +1,14 @@
-// src/app.js
-
 const express = require("express");
-const messageRoutes = require("./routes/message.route");
-const productRoutes = require("./routes/product.route");
-const userRoutes = require("./routes/user.route");
+const authRoutes = require("./routes/auth.route");
+const studentRoutes = require("./routes/student.route");
 
 const app = express();
 
-// Middleware
 app.use(express.json());
 
-// Home Route
+app.use("/api/auth", authRoutes);
+app.use("/api/students", studentRoutes);
+
 app.get("/", (req, res) => {
   res.status(200).json({
     success: true,
@@ -18,7 +16,6 @@ app.get("/", (req, res) => {
   });
 });
 
-// Health Check Route
 app.get("/health", (req, res) => {
   res.status(200).json({
     success: true,
@@ -27,12 +24,6 @@ app.get("/health", (req, res) => {
   });
 });
 
-// API Routes
-app.use("/api", userRoutes);
-app.use("/api", productRoutes);
-app.use("/api", messageRoutes);
-
-// 404 Route
 app.use((req, res) => {
   res.status(404).json({
     success: false,
@@ -40,7 +31,6 @@ app.use((req, res) => {
   });
 });
 
-// Global Error Handler
 app.use((err, req, res, next) => {
   console.error(err);
 
