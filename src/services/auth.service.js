@@ -68,7 +68,7 @@ const loginUser = async (email, password) => {
       role: user.role,
     },
     process.env.JWT_SECRET || "your-secret-key",
-    { expiresIn: "24h" }
+    { expiresIn: process.env.JWT_EXPIRES_IN || "24h" }
   );
 
   const { password: _, ...userResponse } = user;
