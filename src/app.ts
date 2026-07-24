@@ -1,6 +1,6 @@
-const express = require("express");
-const authRoutes = require("./routes/auth.route");
-const studentRoutes = require("./routes/student.route");
+import express, { Request, Response, NextFunction } from "express";
+import authRoutes from "./routes/auth.route";
+import studentRoutes from "./routes/student.route";
 
 const app = express();
 
@@ -9,14 +9,14 @@ app.use(express.json());
 app.use("/api/auth", authRoutes);
 app.use("/api/students", studentRoutes);
 
-app.get("/", (req, res) => {
+app.get("/", (req: Request, res: Response) => {
   res.status(200).json({
     success: true,
     message: "Backend Training API is running",
   });
 });
 
-app.get("/health", (req, res) => {
+app.get("/health", (req: Request, res: Response) => {
   res.status(200).json({
     success: true,
     message: "Server is running",
@@ -24,14 +24,14 @@ app.get("/health", (req, res) => {
   });
 });
 
-app.use((req, res) => {
+app.use((req: Request, res: Response) => {
   res.status(404).json({
     success: false,
     message: "Route not found",
   });
 });
 
-app.use((err, req, res, next) => {
+app.use((err: any, req: Request, res: Response, next: NextFunction) => {
   console.error(err);
 
   res.status(err.status || 500).json({
@@ -40,4 +40,4 @@ app.use((err, req, res, next) => {
   });
 });
 
-module.exports = app;
+export default app;

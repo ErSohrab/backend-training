@@ -1,12 +1,13 @@
-const {
+import { Request, Response } from "express";
+import {
   createStudent,
   getAllStudents,
   getStudentById,
   updateStudent,
   deleteStudent,
-} = require("../services/student.service");
+} from "../services/student.service";
 
-const create = async (req, res) => {
+const create = async (req: Request, res: Response): Promise<void> => {
   try {
     const student = await createStudent(req.body);
 
@@ -19,12 +20,12 @@ const create = async (req, res) => {
     console.error("Create student error:", error);
     res.status(500).json({
       success: false,
-      message: error.message || "Internal Server Error",
+      message: error instanceof Error ? error.message : "Internal Server Error",
     });
   }
 };
 
-const getAll = async (req, res) => {
+const getAll = async (req: Request, res: Response): Promise<void> => {
   try {
     const students = await getAllStudents();
 
@@ -36,15 +37,16 @@ const getAll = async (req, res) => {
     console.error("Get all students error:", error);
     res.status(500).json({
       success: false,
-      message: error.message || "Internal Server Error",
+      message: error instanceof Error ? error.message : "Internal Server Error",
     });
   }
 };
 
-const getById = async (req, res) => {
+const getById = async (req: Request, res: Response): Promise<void> => {
   try {
     const { id } = req.params;
-    const student = await getStudentById(id);
+    const studentId = Array.isArray(id) ? id[0] : id;
+    const student = await getStudentById(studentId);
 
     res.status(200).json({
       success: true,
@@ -53,24 +55,26 @@ const getById = async (req, res) => {
   } catch (error) {
     console.error("Get student by id error:", error);
 
-    if (error.message === "Student not found") {
-      return res.status(404).json({
+    if (error instanceof Error && error.message === "Student not found") {
+      res.status(404).json({
         success: false,
         message: error.message,
       });
+      return;
     }
 
     res.status(500).json({
       success: false,
-      message: error.message || "Internal Server Error",
+      message: error instanceof Error ? error.message : "Internal Server Error",
     });
   }
 };
 
-const update = async (req, res) => {
+const update = async (req: Request, res: Response): Promise<void> => {
   try {
     const { id } = req.params;
-    const student = await updateStudent(id, req.body);
+    const studentId = Array.isArray(id) ? id[0] : id;
+    const student = await updateStudent(studentId, req.body);
 
     res.status(200).json({
       success: true,
@@ -80,24 +84,26 @@ const update = async (req, res) => {
   } catch (error) {
     console.error("Update student error:", error);
 
-    if (error.message === "Student not found or update failed") {
-      return res.status(404).json({
+    if (error instanceof Error && error.message === "Student not found or update failed") {
+      res.status(404).json({
         success: false,
         message: error.message,
       });
+      return;
     }
 
     res.status(500).json({
       success: false,
-      message: error.message || "Internal Server Error",
+      message: error instanceof Error ? error.message : "Internal Server Error",
     });
   }
 };
 
-const remove = async (req, res) => {
+const remove = async (req: Request, res: Response): Promise<void> => {
   try {
     const { id } = req.params;
-    const student = await deleteStudent(id);
+    const studentId = Array.isArray(id) ? id[0] : id;
+    const student = await deleteStudent(studentId);
 
     res.status(200).json({
       success: true,
@@ -107,21 +113,22 @@ const remove = async (req, res) => {
   } catch (error) {
     console.error("Delete student error:", error);
 
-    if (error.message === "Student not found or delete failed") {
-      return res.status(404).json({
+    if (error instanceof Error && error.message === "Student not found or delete failed") {
+      res.status(404).json({
         success: false,
         message: error.message,
       });
+      return;
     }
 
     res.status(500).json({
       success: false,
-      message: error.message || "Internal Server Error",
+      message: error instanceof Error ? error.message : "Internal Server Error",
     });
   }
 };
 
-module.exports = {
+export {
   create,
   getAll,
   getById,

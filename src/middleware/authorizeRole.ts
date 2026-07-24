@@ -1,5 +1,7 @@
-const authorizeRole = (...allowedRoles) => {
-  return (req, res, next) => {
+import { Request, Response, NextFunction } from "express";
+
+const authorizeRole = (...allowedRoles: string[]) => {
+  return (req: Request, res: Response, next: NextFunction): void | Response => {
     const userRole = req.user?.role;
 
     if (!userRole) {
@@ -20,4 +22,4 @@ const authorizeRole = (...allowedRoles) => {
   };
 };
 
-module.exports = authorizeRole;
+export default authorizeRole;

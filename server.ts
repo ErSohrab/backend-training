@@ -1,17 +1,18 @@
-require("dotenv").config();
-const supabase = require("./src/config/supabase");
+import dotenv from "dotenv";
+import supabase from "./src/config/supabase";
+import app from "./src/app";
 
-const app = require("./src/app");
+dotenv.config();
 
 const PORT = process.env.PORT || 5000;
 
-async function startServer() {
+async function startServer(): Promise<void> {
   try {
     const { data, error } = await supabase
-  .from("users") // Replace with one of your real tables
-  .select("*")
-  .limit(1);
-    
+      .from("users")
+      .select("*")
+      .limit(1);
+
     if (error && error.code !== "PGRST116") {
       console.warn("Supabase connection warning:", error.message);
     } else {

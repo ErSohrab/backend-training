@@ -1,11 +1,28 @@
-const supabase = require("../config/supabase");
+import supabase from "../config/supabase";
 
-const generateStudentId = () => {
+interface Student {
+  student_id: string;
+  name: string;
+  email: string;
+  age?: number;
+  grade?: string;
+  created_at: string;
+  updated_at: string;
+}
+
+interface StudentData {
+  name: string;
+  email: string;
+  age?: number;
+  grade?: string;
+}
+
+const generateStudentId = (): string => {
   const randomNumber = Math.floor(Math.random() * 1000000);
-  return `student-${randomNumber}`;
+  return `STU${randomNumber}`
 };
 
-const createStudent = async (studentData) => {
+const createStudent = async (studentData: StudentData): Promise<Student> => {
   const student_id = generateStudentId();
 
   const { data: newStudent, error: insertError } = await supabase
@@ -23,10 +40,10 @@ const createStudent = async (studentData) => {
     throw insertError;
   }
 
-  return newStudent;
+  return newStudent as Student;
 };
 
-const getAllStudents = async () => {
+const getAllStudents = async (): Promise<Student[]> => {
   const { data: students, error } = await supabase
     .from("students")
     .select("*")
@@ -36,10 +53,10 @@ const getAllStudents = async () => {
     throw error;
   }
 
-  return students;
+  return students as Student[];
 };
 
-const getStudentById = async (studentId) => {
+const getStudentById = async (studentId: string): Promise<Student> => {
   const { data: student, error } = await supabase
     .from("students")
     .select("*")
@@ -50,10 +67,13 @@ const getStudentById = async (studentId) => {
     throw new Error("Student not found");
   }
 
-  return student;
+  return student as Student;
 };
 
-const updateStudent = async (studentId, updateData) => {
+const updateStudent = async (
+  studentId: string,
+  updateData: Partial<StudentData>
+): Promise<Student> => {
   const { data: updatedStudent, error } = await supabase
     .from("students")
     .update(updateData)
@@ -65,10 +85,10 @@ const updateStudent = async (studentId, updateData) => {
     throw new Error("Student not found or update failed");
   }
 
-  return updatedStudent;
+  return updatedStudent as Student;
 };
 
-const deleteStudent = async (studentId) => {
+const deleteStudent = async (studentId: string): Promise<Student> => {
   const { data: deletedStudent, error } = await supabase
     .from("students")
     .delete()
@@ -80,10 +100,10 @@ const deleteStudent = async (studentId) => {
     throw new Error("Student not found or delete failed");
   }
 
-  return deletedStudent;
+  return deletedStudent as Student;
 };
 
-module.exports = {
+export {
   createStudent,
   getAllStudents,
   getStudentById,

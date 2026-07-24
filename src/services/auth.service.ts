@@ -1,14 +1,14 @@
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
-const supabase = require("../config/supabase");
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+import supabase from "../config/supabase";
 
-const generateUserId = (role) => {
+const generateUserId = (role: string): string => {
   const prefix = role === "admin" ? "admin" : "user";
   const randomNumber = Math.floor(Math.random() * 1000000);
   return `${prefix}-${randomNumber}`;
 };
 
-const registerUser = async (name, email, password, role = "user") => {
+const registerUser = async (name: string, email: string, password: string, role: string = "user"): Promise<any> => {
   const { data: existingUser } = await supabase
     .from("users")
     .select("*")
@@ -44,7 +44,7 @@ const registerUser = async (name, email, password, role = "user") => {
   return userResponse;
 };
 
-const loginUser = async (email, password) => {
+const loginUser = async (email: string, password: string): Promise<{ token: string; user: any }> => {
   const { data: user, error } = await supabase
     .from("users")
     .select("*")
@@ -68,7 +68,7 @@ const loginUser = async (email, password) => {
       role: user.role,
     },
     process.env.JWT_SECRET || "your-secret-key",
-    { expiresIn: process.env.JWT_EXPIRES_IN || "24h" }
+    { expiresIn: (process.env.JWT_EXPIRES_IN as string) || "24h" } as jwt.SignOptions
   );
 
   const { password: _, ...userResponse } = user;
@@ -79,7 +79,7 @@ const loginUser = async (email, password) => {
   };
 };
 
-const getUserProfile = async (userId) => {
+const getUserProfile = async (userId: string): Promise<{ id: string; name: string; email: string; role: string }> => {
   const { data: user, error } = await supabase
     .from("users")
     .select("user_id, name, email, role")
@@ -98,7 +98,7 @@ const getUserProfile = async (userId) => {
   };
 };
 
-module.exports = {
+export {
   registerUser,
   loginUser,
   getUserProfile,
